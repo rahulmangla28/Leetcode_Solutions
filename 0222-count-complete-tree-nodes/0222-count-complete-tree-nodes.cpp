@@ -14,15 +14,19 @@ public:
     int countNodes(TreeNode* root) {
         if(!root) return 0;
 
-        int hl=0, hr=0;
+        int leftHieght=0, rightHieght=0;
 
-        TreeNode *l=root, *r=root;
+        TreeNode *left = root, *right = root;
 
-        while(l) {hl++;l=l->left;}
+        while(left) {
+            leftHieght++;
+            left = left->left;}
 
-        while(r) {hr++;r=r->right;}
+        while(right) {
+            rightHieght++;
+            right = right->right;}
 
-        if(hl==hr) return pow(2,hl)-1;
+        if(leftHieght == rightHieght) return pow(2,leftHieght)-1;
 
         return 1+countNodes(root->left)+countNodes(root->right);
     }
