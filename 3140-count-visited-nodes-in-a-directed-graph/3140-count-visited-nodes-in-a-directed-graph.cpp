@@ -1,5 +1,5 @@
 class Solution {
-public:
+private:
     void fillCycle(vector<int>& edges, vector<bool>& visited, vector<int>& result, int start) {
         int length = 0;
         for (int x = start; !visited[x]; x = edges[x]) {
@@ -11,49 +11,39 @@ public:
             result[x] = length;
         }
     }
-
+    
+public:
     vector<int> countVisitedNodes(vector<int>& edges) {
         int n = edges.size();
-        vector<int> indegree(n,0);
-        vector<int> res(n,0);
-        vector<bool> vis(n,false);
-
-        for(int i=0;i<n;i++) {
-            indegree[edges[i]] += 1;
-        }
-
+        vector<int> indegree(n), result(n);
+        vector<bool> visited(n);
         queue<int> q;
-        stack<int> stk;
-        for(int i=0;i<n;i++) {
-            if(indegree[i] == 0) {
+        stack<int> s;
+        for (int e: edges) {
+            indegree[e]++;
+        }
+        for (int i = 0; i < n; i++) {
+            if (!indegree[i]) {
                 q.push(i);
             }
         }
-
-        while(!q.empty()) {
-            int node = q.front();
-            q.pop();
-            stk.push(node);
-            vis[node] = true;
-
-            if(!--indegree[edges[node]]) {
-                q.push(edges[node]);
+        while (!q.empty()) {
+            int x = q.front(); q.pop();
+            s.push(x);
+            visited[x] = true;
+            if (!--indegree[edges[x]]) {
+                q.push(edges[x]);
             }
         }
-
-        for(int i=0;i<n;i++) {
-            if(!vis[i]) {
-                fillCycle(edges, vis, res, i);
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                fillCycle(edges, visited, result, i);
             }
         }
-
-        while(!stk.empty()) {
-            int x = stk.top();
-            stk.pop();
-
-            res[x] = res[edges[x]] + 1;
+        while (!s.empty()) {
+            int x = s.top(); s.pop();
+            result[x] = result[edges[x]] + 1;
         }
-
-        return res;
+        return result;
     }
 };
